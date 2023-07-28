@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css">
+    <style>
+        body {
+        background-image: url('./static/axis-bank.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Candidate Login</h1>
+        <form id="login-form" method="post">
+            <input type="text" name="email" placeholder="Email" required style="width: 325px;">
+            <input type="password" name="password" placeholder="Password" required style="width: 325px;">
+            <button type="submit">Login</button>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    <br>
+                </small>
+            </div>
+        </form>
+    </div>
+    <script src="static/scripts/login.js"></script>
+    
+</body>
+</html>
