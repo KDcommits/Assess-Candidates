@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="static/css/assessments.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-image: url('./static/BG_Image_2.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+    </style>
 </head>
 
 <body>
@@ -24,26 +33,45 @@
       </nav>
 
     <div class="menu-container">
-        <h1>Resume-Based Technical Questions</h1>
-        {% for row in qna_data %}
+        <h2 align="center">Resume-Based Technical Questions</h2>
+        {% for row in mcq_questions %}
+        {% set outer_loop = loop %}
         <div class="question-container">
             <div class="question">
                 {{row.question}}
             </div>
-            <textarea class="answer-input" id="q{{loop.index}}_answer" required></textarea>
+            {% for key in row.options.keys() %}
+            <input type="radio" name="q{{outer_loop.index}}" value="{{key}}"> {{row.options[key]}}<br>
+            {% endfor %}
+
+        {% endfor %}
+        <br>
+        {% for row in descriptive_questions %}
+        <div class="question-container">
+            <div class="question">
+                {{row.question}}
+            </div>
+            <textarea class="answer-input" id="q{{loop.index}}_answer"></textarea>
         {% endfor %}
 
         <button onclick="submitAnswers()">Submit Answers</button>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script>
         function submitAnswers() {
-            var answers = {
-                {% for row in qna_data %}
+            descriptive_answers = {
+                {% for row in descriptive_questions %}
                 q{{loop.index}}: document.getElementById('q{{loop.index}}_answer').value,
                 {% endfor %}
             };
+
+            mcq_answers  =  {
+                {% for row in mcq_questions %}
+                q{{loop.index}}: document.querySelector('input[name="q{{loop.index}}"]:checked').value,
+                {% endfor %}
+            };
+
+            var answers = {'mcq_answers':mcq_answers,
+                            'descriptive_answers':descriptive_answers};
 
             // Send the answers to the Flask backend using Fetch API
             fetch('/submit_answers', {
@@ -61,8 +89,10 @@
             .catch(error => {
                 console.error('Error:', error);
             });
-        }
+        };
     </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    
 </body>
 
 
