@@ -9,7 +9,7 @@ import mysql.connector
 from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
 from werkzeug.utils import secure_filename
-from assess_candidate import updateCandidateDescriptiveAnswers
+from assess_candidate import AssessCandidate
 from flask import Flask, render_template, request, url_for, redirect, session, jsonify
 
 load_dotenv()
@@ -43,8 +43,20 @@ def submit_answers():
         if request.method =="POST":
             candidate_email_id = session['user_id']
             print(candidate_email_id)
-            candidate_answers = list(request.json.values())
-            updateCandidateDescriptiveAnswers(candidate_email_id, candidate_answers)
+            mcq_answers = list(request.json['mcq_answers'].values())
+            descriptive_answers = list(request.json['descriptive_answers'].values())
+            assess_object = AssessCandidate(candidate_email_id)
+            print(mcq_answers)
+            print(descriptive_answers)
+            descriptive_answers = ['The VLOOKUP function in MS Excel is used to search for a value in the first column of a table range and return a related value from another specified column',
+                     'Lean Six Sigma - Green Belt is a level of certification that indicates a persons understanding and proficiency in process improvement methodologies.',
+                     '',
+                     '',
+                     '',
+                     ]
+        
+            descriptive_score = assess_object.updateCandidateDescriptiveAnswers(descriptive_answers)
+            objective_score = assess_object.updateCandidateMCQAnswers(mcq_answers)
             ## return a page to showcase the score/ Thank you message
             return jsonify({'message': 'Answers received successfully'})
         
@@ -73,8 +85,10 @@ def dashboard():
     if "user_id" in session:
         candidate_email_id = session['user_id']
         filter_={"email":candidate_email_id}
-        qna_data = candidate_qna.find(filter_, {'descriptive_qna'}).next()['descriptive_qna']
-        return render_template("test_descriptive.html", qna_data = qna_data)
+        descriptive_questions = candidate_qna.find(filter_, {'resume_descriptive_qna'}).next()['resume_descriptive_qna']
+        mcq_questions = candidate_qna.find(filter_, {'resume_mcq'}).next()['resume_mcq']
+        return render_template("test_descriptive.html", mcq_questions = mcq_questions,
+                               descriptive_questions = descriptive_questions)
     else:
         return redirect("/")
         
