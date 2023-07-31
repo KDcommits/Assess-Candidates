@@ -87,7 +87,7 @@ def dashboard():
         filter_={"email":candidate_email_id}
         descriptive_questions = candidate_qna.find(filter_, {'resume_descriptive_qna'}).next()['resume_descriptive_qna']
         mcq_questions = candidate_qna.find(filter_, {'resume_mcq'}).next()['resume_mcq']
-        return render_template("test_descriptive.html", mcq_questions = mcq_questions,
+        return render_template("assess_candidate.html", mcq_questions = mcq_questions,
                                descriptive_questions = descriptive_questions)
     else:
         return redirect("/")
