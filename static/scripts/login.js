@@ -11,7 +11,7 @@ document.getElementById("login-form").addEventListener("submit", function (event
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
-                window.location.href = "/home"; 
+                window.location.href = "/test_instructions"; 
             } else {
                 alert("Invalid credentials. Please try again.");
             }

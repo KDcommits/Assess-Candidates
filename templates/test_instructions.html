@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assignment Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color:  #e78cb1;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        .instructions {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .details span {
+            font-weight: bold;
+        }
+        .warning {
+            color: #f00;
+            font-size: 14px;
+        }
+        .start-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .start-btn:hover {
+            background-color: #0056b3;
+        }
+        body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        background-image: url('./static/BG_Image_2.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        }
+
+        .menu-container {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        width: 600px;
+        margin-top: 80px;
+        margin-left: 200px;
+        align-content: center;
+        margin-left: 400px;
+    }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Assignment Instructions</h1>
+    </header>
+
+    <div class="menu-container">
+        <div class="instructions">
+            <p>
+                Welcome to the assignment! Please read the following instructions carefully before starting the assignment.
+            </p>
+            <p>
+                Total number of questions: <span id="totalQuestions">20</span>
+            </p>
+            <p>
+                Marks for each question: <span id="marksPerQuestion">1</span>
+            </p>
+            <p>
+                Negative marking: <span id="negativeMarking">No</span>
+            </p>
+            <p>
+                Duration: <span id="duration">30 minutes</span>
+            </p>
+        </div>
+        <p class="warning">Note: Once the exam is started, you must complete it in one go. 
+            If your session is terminated no further chance will be provided. We wish you all the very best!</p>
+        <button class="start-btn" onclick="startAssignment()">Start Assignment</button>
+    </div>
+
+    <script>
+        function startAssignment() {
+            alert("Starting the assignment!");
+            window.location.href = '/home';
+        }
+    </script>
+</body>
+</html>

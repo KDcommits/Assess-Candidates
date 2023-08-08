@@ -8,7 +8,6 @@ import pandas as pd
 import mysql.connector
 from dotenv import load_dotenv
 warnings.filterwarnings('ignore')
-from werkzeug.utils import secure_filename
 from assess_candidate import AssessCandidate
 from flask import Flask, render_template, request, url_for, redirect, session, jsonify
 
@@ -40,28 +39,20 @@ def home():
 @app.route('/submit_answers', methods=['POST'])
 def submit_answers():
     if "user_id" in session:
-        if request.method =="POST":
-            candidate_email_id = session['user_id']
-            print(candidate_email_id)
-            mcq_answers = list(request.json['mcq_answers'].values())
-            descriptive_answers = list(request.json['descriptive_answers'].values())
-            assess_object = AssessCandidate(candidate_email_id)
-            print(mcq_answers)
-            print(descriptive_answers)
-            descriptive_answers = ['The VLOOKUP function in MS Excel is used to search for a value in the first column of a table range and return a related value from another specified column',
-                     'Lean Six Sigma - Green Belt is a level of certification that indicates a persons understanding and proficiency in process improvement methodologies.',
-                     '',
-                     '',
-                     '',
-                     ]
+        candidate_email_id = session['user_id']
+        print(candidate_email_id)
+        mcq_answers = list(request.json['mcq_answers'].values())
+        descriptive_answers = list(request.json['descriptive_answers'].values())
+        assess_object = AssessCandidate(candidate_email_id)
+        descriptive_score = assess_object.updateCandidateDescriptiveAnswers(descriptive_answers)
+        objective_score = assess_object.updateCandidateMCQAnswers(mcq_answers)
+        net_score = round(((descriptive_score+objective_score)/2)*100, 2)
+        candidate_qna.update_one({"email": candidate_email_id}, 
+                                                {"$set": {"status": "Assessment Completed","test_score":net_score}})
+        return {"success": True}
+    else:
+        return render_template('/')
         
-            descriptive_score = assess_object.updateCandidateDescriptiveAnswers(descriptive_answers)
-            objective_score = assess_object.updateCandidateMCQAnswers(mcq_answers)
-            ## return a page to showcase the score/ Thank you message
-            return jsonify({'message': 'Answers received successfully'})
-        
-
-# row  : 'ec7b963a86914fe4', 'utkarshrastogi101@gmail.com', 'be9cbd4821944d7a'
 @app.route("/login", methods=['GET','POST'])
 def login():
     if request.method == 'POST':
@@ -80,6 +71,14 @@ def login():
     else:
         return render_template('login.html')
     
+@app.route("/test_instructions")
+def test_instructions():
+    if "user_id" in session:
+        return render_template("test_instructions.html")
+    else:
+        return redirect("/")
+
+    
 @app.route("/home")
 def dashboard():
     if "user_id" in session:
@@ -91,6 +90,13 @@ def dashboard():
                                descriptive_questions = descriptive_questions)
     else:
         return redirect("/")
+    
+@app.route('/say_thanks', methods = ['GET','POST'])
+def say_thanks():
+    #session.pop('user_id')
+    print("Session : ", session)
+    return render_template("thank_you_page.html")
+
         
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
